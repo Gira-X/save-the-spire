@@ -19,11 +19,11 @@ class NavItem extends Component {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: (this.props.isSelected || this.state.hover) ? '#2e282a' : '#3e383a',
+                backgroundColor: (this.props.isSelected || this.state.hover) ? '#2e282a' : '#4f444d',
+	            cursor: 'pointer',
             },
             a: {
                 width: '100%',
-                cursor: 'default'
             },
         };
 

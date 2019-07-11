@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import styles from '../styles/Potions.module.css'
+import cards from "./CardsJSON";
+import CardColor from "../utils/CardColor";
 
 class Item extends Component {
 
@@ -17,11 +19,12 @@ class Item extends Component {
             alignItems: 'center',
             justifyContent: 'center',
             display: 'flex',
-            cursor: 'default'
+            cursor: 'pointer',
         };
 
         let specificStyle;
-        if (this.props.type === 'RelicItem' || this.props.type === 'CardItem') {
+        // the 'Card' and 'CardItem' types are handled directly in render()
+        if (this.props.type === 'RelicItem') {
             specificStyle = {
                 backgroundColor: this.state.hover ? '#17bebb' : '#27cecb',
                 border: '1px solid #17bebb'
@@ -30,11 +33,6 @@ class Item extends Component {
             specificStyle = {
                 backgroundColor: this.state.hover ? '#46d38f' : '#56e39f',
                 border: '1px solid #46d38f'
-            };
-        } else if (this.props.type === 'Card') {
-            specificStyle = {
-                backgroundColor: this.state.hover ? '#df2e26' : '#ef3e36',
-                border: '1px solid #df2e26'
             };
         } else if (this.props.type === 'Potion') {
             specificStyle = {
@@ -55,7 +53,7 @@ class Item extends Component {
     }
 
     render() {
-        const style = this.createStyle();
+        let style = this.createStyle();
 
         if (this.props.type === 'Potion') {
             if (this.props.active) {
@@ -70,13 +68,44 @@ class Item extends Component {
                 </div>
 
             )
+        } else if (this.props.type === 'Card' || this.props.type === 'CardItem') {
+            const cardName = this.props.name;
+            let card;
+        	if (cardName.endsWith('+')) {
+        	    card = cards[cardName.substring(0, cardName.length - 1)];
+            } else {
+        	    card = cards[cardName];
+            }
+            let cssColor = CardColor.getHexColor(card, this.state.hover);
+            style.backgroundColor = cssColor;
+            if (this.props.type === 'CardItem') {
+                style.borderBottom = '1px solid #999';
+                style.minWidth = '250px';
+                style = {
+                    ...style,
+                    margin: '0 auto',
+                    paddingLeft: '30px',
+                    paddingRight: '30px',
+                    borderTop: '5px solid white',
+                    borderBottom: '5px solid white',
+                };
+            } else {
+                if (this.props.bottled === false) {
+                    // when bottled, we use the border style from createStyle()
+                    style.border = '1px solid ' + cssColor;
+                }
+            }
+            if (card.color === 'CURSE') {
+                // Curses have a black background, so we also need to set a white text color to be
+                // able to read the card name
+                style.color = '#fff';
+            }
         }
 
         return (
             <div onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover} onClick={this.props.onClick} style={style}>
                 {this.props.name}
             </div>
-
         );
     }
 }

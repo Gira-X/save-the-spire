@@ -127,7 +127,10 @@ class CardSelector extends Component {
                     })}
                 </div>
                 <div style={styles.upgrade}>
-                    <input onChange={this.toggleCheckbox} type='checkbox' value={this.state.upgraded}/><label>upgraded</label>
+	                <label>
+                        <input onChange={this.toggleCheckbox} type='checkbox' value={this.state.upgraded}/>
+                        upgraded
+	                </label>
                 </div>
                 <div style={styles.cards}>
                     {cardsList}
